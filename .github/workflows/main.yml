@@ -37,3 +37,4 @@ jobs:
             -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.KINSTA_PORT }} -o StrictHostKeyChecking=no" \
             ./wp-content/ \
             ${{ secrets.KINSTA_USER }}@${{ secrets.KINSTA_HOST }}:/www/testmig_838/public/wp-content/
+            
