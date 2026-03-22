@@ -1,0 +1,24 @@
+name: Deploy to Kinsta
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy via SSH/SFTP
+        uses: burnett01/rsync-deployments@6.0.0
+        with:
+          switches: -avzr --delete --exclude='uploads/' --exclude='.git'
+          path: wp-content/
+          remote_path: /www/testmig_838/public/wp-content/
+          remote_host: ${{ secrets.KINSTA_HOST }}
+          remote_port: ${{ secrets.KINSTA_PORT }}
+          remote_user: ${{ secrets.KINSTA_USER }}
+          remote_key: ${{ secrets.KINSTA_SSH_KEY }}
