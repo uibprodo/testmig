@@ -15,9 +15,17 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.KINSTA_SSH_KEY }}" > ~/.ssh/deploy_key
+          echo "${{ secrets.KINSTA_SSH_KEY }}" | base64 -d > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p ${{ secrets.KINSTA_PORT }} ${{ secrets.KINSTA_HOST }} >> ~/.ssh/known_hosts
+          
+      - name: Verify SSH connection
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            -p ${{ secrets.KINSTA_PORT }} \
+            -o StrictHostKeyChecking=no \
+            ${{ secrets.KINSTA_USER }}@${{ secrets.KINSTA_HOST }} \
+            "echo SSH connection successful"
 
       - name: Deploy via Rsync
         run: |
