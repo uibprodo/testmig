@@ -23,7 +23,7 @@ jobs:
 
       - name: Deploy via Rsync
         run: |
-          rsync -avzr --delete \
+          rsync -avzr \
             --exclude='uploads/' \
             --exclude='.git' \
             -e "ssh -p ${{ secrets.KINSTA_PORT }} -o StrictHostKeyChecking=no" \
