@@ -19,6 +19,11 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p ${{ secrets.KINSTA_PORT }} ${{ secrets.KINSTA_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Debug key fingerprint
+      - name: Deploy via Rsync
         run: |
-          ssh-keygen -lf ~/.ssh/deploy_key
+          rsync -avzr --delete \
+            --exclude='uploads/' \
+            --exclude='.git' \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.KINSTA_PORT }} -o StrictHostKeyChecking=no" \
+            ./wp-content/ \
+            ${{ secrets.KINSTA_USER }}@${{ secrets.KINSTA_HOST }}:/www/testmig_838/public/wp-content/
