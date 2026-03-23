@@ -15,10 +15,14 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          cat << 'SSHKEY' > ~/.ssh/deploy_key
-          ${{ secrets.KINSTA_SSH_KEY }}
-          SSHKEY
+          echo "${{ secrets.KINSTA_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
+          echo "--- Key first line ---"
+          head -1 ~/.ssh/deploy_key
+          echo "--- Key last line ---"
+          tail -1 ~/.ssh/deploy_key
+          echo "--- Line count ---"
+          wc -l ~/.ssh/deploy_key
           ssh-keyscan -p ${{ secrets.KINSTA_PORT }} ${{ secrets.KINSTA_HOST }} >> ~/.ssh/known_hosts
 
       - name: Test SSH connection
